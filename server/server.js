@@ -3,6 +3,7 @@ const http = require('http');
 
 const express = require('express');
 const socketIO = require('socket.io');
+const {generateMessage} = require('./utils/message');
 
 const publicPath = path.join(__dirname, '../public');
 const port = process.env.PORT || 3000
@@ -17,23 +18,15 @@ app.use(express.static(publicPath));    //configuration
 io.on('connection', (socket)=>{   //registering listener to connection args-> event name, callback
     console.log('new user connected');
 
-    // socket.emit('newEmail', {    //args-> event name, data
-    //     from: 'kiki@example.com',
-    //     text: 'some message',
-    //     createdAt: 123
-    // });
-    // socket.on('createEmail', (newEmail)=>{
-    //     console.log('create email: ', newEmail);
-    // });
+    socket.emit('newMessage', generateMessage('admin', 'welcome to chat app'));
+    //msg will will sent to everbody except itself
+    socket.broadcast.emit('newMessage', generateMessage('admin', 'new user joined'));
+    
 
     socket.on('createMessage', (message)=>{ //listenser for create message event
         console.log('Create Message: ', message);
         //io.emit emits to every single connection while socket.emit emits to only one connection
-        io.emit('newMessage', {
-            from: message.from,
-            text: message.text,
-            createdAt: new Date().getTime()
-        });
+        io.emit('newMessage', generateMessage(message.from, message.text));
     });
 
     socket.on('disconnect', ()=>{
