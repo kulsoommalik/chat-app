@@ -23,10 +23,11 @@ io.on('connection', (socket)=>{   //registering listener to connection args-> ev
     socket.broadcast.emit('newMessage', generateMessage('admin', 'new user joined'));
     
 
-    socket.on('createMessage', (message)=>{ //listenser for create message event
+    socket.on('createMessage', (message, callback)=>{ //listenser for create message event
         console.log('Create Message: ', message);
         //io.emit emits to every single connection while socket.emit emits to only one connection
         io.emit('newMessage', generateMessage(message.from, message.text));
+        callback('This is from server');
     });
 
     socket.on('disconnect', ()=>{
