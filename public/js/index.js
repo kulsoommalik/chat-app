@@ -6,10 +6,6 @@ socket.on('connect', function (){
     //     to: 'blahblah@gamil.com',
     //     text:'something text'
     // });
-    socket.emit('createMessage', {  //emiting create message event
-        form: 'asad',
-        text: 'hey!!!'
-    });
 
 });
 

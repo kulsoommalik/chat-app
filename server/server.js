@@ -28,12 +28,12 @@ io.on('connection', (socket)=>{   //registering listener to connection args-> ev
 
     socket.on('createMessage', (message)=>{ //listenser for create message event
         console.log('Create Message: ', message);
-    });
-
-    socket.emit('newMessage', {
-        from: 'Kiki',
-        text: 'Hello world',
-        createdAt: 123
+        //io.emit emits to every single connection while socket.emit emits to only one connection
+        io.emit('newMessage', {
+            from: message.from,
+            text: message.text,
+            createdAt: new Date().getTime()
+        });
     });
 
     socket.on('disconnect', ()=>{
