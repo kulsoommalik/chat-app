@@ -38,14 +38,19 @@ io.on('connection', (socket)=>{   //registering listener to connection args-> ev
 
     //listenser createMessage
     socket.on('createMessage', (message, callback)=>{ //listenser for create message event
-        console.log('Create Message: ', message);
+        var user = users.getUser(socket.id);
+        if(user && isRealString(message.text)){
         //io.emit emits to every single connection while socket.emit emits to only one connection
-        io.emit('newMessage', generateMessage(message.from, message.text));
+        io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
+        }
         callback();
     });
-
+    //listener createLocationMessage
     socket.on('createLocationMessage', (coords) => {
-        io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude ,coords.longitude));
+        var user = users.getUser(socket.id);
+        if(user){
+            io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude ,coords.longitude));
+        }
     });
 
     //disconnect
