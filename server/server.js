@@ -22,12 +22,12 @@ io.on('connection', (socket)=>{   //registering listener to connection args-> ev
     //msg will will sent to everbody except itself
     socket.broadcast.emit('newMessage', generateMessage('admin', 'new user joined'));
     
-
+    //listenser createMessage
     socket.on('createMessage', (message, callback)=>{ //listenser for create message event
         console.log('Create Message: ', message);
         //io.emit emits to every single connection while socket.emit emits to only one connection
         io.emit('newMessage', generateMessage(message.from, message.text));
-        callback('This is from server');
+        callback();
     });
 
     socket.on('createLocationMessage', (coords) => {
