@@ -16,20 +16,35 @@ function scrollToBottom(){
         messages.scrollTop(scrollHeight);
     }
 }
-
+//====connect / disconnect ========
 socket.on('connect', function (){
-    console.log('Connected to server');
+    //console.log('Connected to server');
+    var params = jQuery.deparam(window.location.search);
+    socket.emit('join', params, function (err){
+        if(err){
+            alert(err);
+            window.location.href = '/';
+        }
+        else{
+            console.log('no error');
+        }
+    });
 });
 
 socket.on('disconnect', function (){
     console.log('Disconnected from server');
 });
 
-//custom event
-// socket.on('newEmail', function (email){  //listenser for email
-//     console.log('Email: ', email);
-// });
+//listener userList
+socket.on('updateUserList', function (users){
+    var ol = jQuery('<ol></ol>');
+    users.forEach(function (user){
+        ol.append(jQuery('<li></li>').text(user));
+    });
+    jQuery('#users').html(ol);
+});
 
+//custom event
 //listener to new msg
 socket.on('newMessage', function (message) {
      var formattedTime = moment(message.createdAt).format('h:mm a'); //time
